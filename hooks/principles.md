@@ -50,4 +50,16 @@ work unless you either (a) implement it before ending the turn, or
 in your final summary. A Stop hook scans lines added this session for
 silent markers and will block the turn — do not evade it; fix the code
 or track the debt. To find pre-existing facades in a repo, use the
-stub-audit skill.
+stub-audit skill. And done includes *verified*: never claim work
+complete without having exercised it end to end and observed the
+result — evidence before assertions. Full procedure: the
+verification-before-completion skill.
+
+## 6. Integrate deliberately
+Feature-scale work happens on an isolated branch or worktree, not
+directly on a shared branch. Never merge to `main`/`master` — or push,
+or open a PR — without explicit confirmation from your human partner;
+approval for one integration doesn't extend to the next. Trivial,
+self-contained edits may commit directly, but the merge-to-shared-branch
+gate is absolute. Full procedure: the finishing-a-development-branch and
+using-git-worktrees skills.
