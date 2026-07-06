@@ -1,0 +1,18 @@
+{
+  "name": "fable-harness",
+  "description": "Fable-style operating principles for Claude Code on Opus/Sonnet: systems mapping before edits, integration-first thinking, multi-agent fan-out, divergent design exploration, and zero silent TODOs (enforced by a Stop hook).",
+  "version": "1.0.0",
+  "author": {
+    "name": "Gavin McQuillan",
+    "email": "gavin.mcquillan@gmail.com"
+  },
+  "license": "MIT",
+  "keywords": [
+    "systems-thinking",
+    "orchestration",
+    "integrations",
+    "design-exploration",
+    "completion-integrity",
+    "hooks"
+  ]
+}

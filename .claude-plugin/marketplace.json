@@ -1,0 +1,20 @@
+{
+  "name": "gmcquillan-plugins",
+  "owner": {
+    "name": "Gavin McQuillan",
+    "email": "gavin.mcquillan@gmail.com"
+  },
+  "metadata": {
+    "description": "Gavin's personal Claude Code plugins",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "fable-harness",
+      "source": "./",
+      "description": "Fable-style operating principles: systems mapping, integration-first thinking, fan-out orchestration, divergent design, zero silent TODOs.",
+      "version": "1.0.0",
+      "strict": true
+    }
+  ]
+}
