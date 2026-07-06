@@ -28,7 +28,7 @@ and Sonnet (fan-out subagents).
 ## Install
 
 ```bash
-claude plugin marketplace add <path-or-github-repo>
+claude plugin marketplace add gmcquillan/fable-harness
 claude plugin install fable-harness@gmcquillan-plugins
 ```
 
