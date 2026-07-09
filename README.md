@@ -5,7 +5,8 @@ and Sonnet (fan-out subagents).
 
 ## What it does
 
-- **Five always-on principles** injected at session start
+- **Five always-on principles** injected at session start — and re-injected
+  after context compaction and on resume, so they survive long sessions
   (`hooks/principles.md`): map before you touch, the codebase as one node in
   an ecosystem, diverge before you converge, delegate breadth / keep
   judgment, and done means done.
@@ -24,6 +25,11 @@ and Sonnet (fan-out subagents).
 - **MCP inventory SessionStart hook**: injects the list of connected MCP
   servers so integration-first thinking starts from what is actually
   available.
+- **Serial-exploration tripwire PostToolUse hook**: counts consecutive
+  Read/Grep/Glob calls in the main loop; every 7 without a subagent
+  dispatch, it injects a nudge to fan out scouts (or justify staying
+  serial). The counter resets on any Agent/Edit/Write call, and subagent
+  sidechains are exempt — scouts are supposed to read serially.
 
 ## Install
 

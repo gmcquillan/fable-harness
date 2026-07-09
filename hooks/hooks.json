@@ -2,12 +2,17 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|clear",
+        "matcher": "startup|resume|clear|compact",
         "hooks": [
           {
             "type": "command",
             "command": "cat \"${CLAUDE_PLUGIN_ROOT}/hooks/principles.md\""
-          },
+          }
+        ]
+      },
+      {
+        "matcher": "startup|clear",
+        "hooks": [
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/mcp-inventory.sh\"",
@@ -16,6 +21,30 @@
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/stub-check.sh\" baseline"
+          },
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/explore-tripwire.sh\" baseline"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Read|Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/explore-tripwire.sh\" count"
+          }
+        ]
+      },
+      {
+        "matcher": "Agent|Task|Edit|Write|NotebookEdit|Workflow",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/explore-tripwire.sh\" reset"
           }
         ]
       }

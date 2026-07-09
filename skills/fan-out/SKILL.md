@@ -1,12 +1,26 @@
 ---
 name: fan-out
-description: Use when a task spans many files, questions, or verification targets — or when invoked as /fan-out. Playbook for parallel subagent orchestration - what to parallelize, pipeline vs barrier, adversarial verification, model assignment.
+description: Use when a task spans many files, questions, or verification targets — or when invoked as /fan-out, or when you catch yourself reading file after file serially, or about to report a finding nobody has tried to refute. Playbook for parallel subagent orchestration - what to parallelize, pipeline vs barrier, adversarial verification, model assignment.
 ---
 
 # Fan-Out Orchestration
 
 The main loop is for judgment and synthesis; breadth belongs to
 subagents.
+
+## On triggering: todos first, dispatch second
+
+Create one TodoWrite entry per step below BEFORE reading another file or
+dispatching anything. Skipped steps are how fan-outs silently degrade
+into serial reading.
+
+1. Enumerate the independent units of work (subsystems, questions,
+   files, findings-to-verify).
+2. Write one bounded question + required report format per unit.
+3. Dispatch ALL independent agents in a single message.
+4. Synthesize results in the main loop.
+5. Send each significant finding to a `skeptic` before reporting it.
+6. Report coverage: anything sampled, truncated, or skipped.
 
 ## When to fan out
 
@@ -35,6 +49,20 @@ subagents.
    synthesis, and ambiguous calls.
 6. No silent caps: if you sampled, truncated, or skipped anything, say
    exactly what was not covered.
+
+## Red flags — you are rationalizing
+
+| Thought | Reality |
+|---------|---------|
+| "It's faster to read the files myself" | Serial reading is slower wall-clock AND fills your context with raw file dumps you pay for all session. Scouts return conclusions. |
+| "Dispatching agents is overhead here" | One message dispatching 4 scouts costs less than 4 more of your own file-reading detours. The overhead IS the serial reads. |
+| "A subagent starts cold; I already have context" | The agent doesn't need your context — it needs one bounded question. If you can't phrase that question, you don't have context either. |
+| "I'll dispatch one agent and see how it goes" | Serial dispatch of independent work is a bug (Rule 1). All of them, one message. |
+| "This finding is obviously right — no skeptic needed" | Obviously-right-but-wrong findings are exactly the ones that reach the report. Verification exists FOR confident claims. |
+| "I've read this much already; switching now is churn" | Sunk serial reading is not a reason to keep reading serially. Only the remaining breadth matters. |
+
+Any of these thoughts means STOP: enumerate the independent units and
+dispatch them in one message.
 
 ## Bundled workflows (heavier machinery, invoke explicitly)
 
