@@ -74,6 +74,25 @@ diff_hits=""
 if [ -n "$base" ]; then
   diff_hits=$(git diff "$base" --unified=0 -- . "${gen_pb_pathspecs[@]}" 2>/dev/null \
     | grep -E '^\+[^+]' | grep -vE '^\+\+\+' || true)
+
+  # Work merged/pulled in from upstream since the baseline is not "added this
+  # session" — it shows up in the diff only because HEAD moved past $base.
+  # Subtract every line the default branch introduced since the merge-base.
+  if [ -n "$diff_hits" ]; then
+    upstream_added=""
+    for ref in refs/remotes/origin/HEAD refs/remotes/origin/main refs/remotes/origin/master \
+               refs/heads/main refs/heads/master; do
+      git rev-parse --verify -q "$ref^{commit}" >/dev/null 2>&1 || continue
+      mb=$(git merge-base "$base" "$ref" 2>/dev/null) || continue
+      upstream_added="$upstream_added
+$(git diff "$mb" "$ref" --unified=0 -- . "${gen_pb_pathspecs[@]}" 2>/dev/null \
+        | grep -E '^\+[^+]' | grep -vE '^\+\+\+' || true)"
+    done
+    upstream_added=$(printf '%s\n' "$upstream_added" | sed '/^$/d')
+    if [ -n "$upstream_added" ]; then
+      diff_hits=$(printf '%s\n' "$diff_hits" | grep -vxF -f <(printf '%s\n' "$upstream_added") || true)
+    fi
+  fi
 fi
 
 # Untracked files are invisible to diff — grep only ones NEW this session,
